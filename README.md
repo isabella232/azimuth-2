@@ -56,7 +56,7 @@ Fetching timescales is currently slow. It is done effectively "from scratch" eve
 
 During development, it was possible that after clearing a graph and loading a new one that the new graph would fail to plot, and the program would become stuck. While this has presumably already been fixed, in the event that this happens, the program can be reset by clearing all three plots and reloading data.
 
-Attempting to build this code produces several warnings due to lack of parameterization of typing for interface components in the ChannelSelector class, which was imported from a separate repository and has not been modified. (Specifically, components are defined like JComboBox instead of JComboBox<File>).
+Attempting to build this code produces several warnings due to lack of parameterization of typing for interface components in the ChannelSelector class, which was imported from a separate repository and has not been modified. (Specifically, components are defined like `JComboBox` instead of `JComboBox<File>`).
 
 Selecting the currently-displayed time series with the drop-down menu resets the plot, just like hitting the zoom out button. It may be preferable to keep track of the currently-selected graph and only update the plot when the selection has changed.
 
