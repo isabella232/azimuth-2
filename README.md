@@ -66,4 +66,6 @@ One feature request was for the correction angle as shown in the azimuth calcula
 
 If samples from time ranges that do not overlap are loaded, the program may not produce proper error handling to prevent the loading of that data. This has not been fully tested.
 
+The code does not have a full unit test. However, the end results of calculations using sample data have been saved as images in the TEST folder. Next immediate step will be guaranteeing that some backend classes (like FilterHelper and FilterBlock) are guaranteed to behave as intended.
+
 While all plots zoom in when dragging from the right, only the plot where clicking and dragging from the left was done will be zoomed out.
