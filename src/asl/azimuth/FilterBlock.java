@@ -28,9 +28,13 @@ public class FilterBlock extends ContiguousBlock
      * @param cBlock A ContiguousBlock as taken from ChannelSelector
      * @param dSet A DataSet corresponding to the ContiguousBlock
      */
-    public FilterBlock(ContiguousBlock cBlock, DataSet dSet) throws SequenceRangeException{
-        // TODO: add exception in case someone decides to pass non-matching parameters?
-        // contiguousBlock has the time/interval data we need, dataSet the data sequence and plot names
+    public FilterBlock(ContiguousBlock cBlock, DataSet dSet) 
+                                 throws SequenceRangeException{
+        // TODO: add exception in case someone decides 
+        // to pass non-matching time interval and data?
+
+        // contiguousBlock has the time/interval data we need, 
+        // dataSet the data sequence and plot names
         super(cBlock.getStartTime(), cBlock.getEndTime(),
               FilterHelper.ONE_HZ_INTERVAL);
 
@@ -46,11 +50,11 @@ public class FilterBlock extends ContiguousBlock
            int[] subset = dSet.getSeries(cBlock.getStartTime(),
                              cBlock.getEndTime());
            int[] temp = FilterHelper.decimate(subset, itv);
-
-           if(temp == null) System.out.println("Debugging some weird null stuff...");
           
-           // this prevents m_intData from becoming null when we exit the constructor
-           // presumably this is because the filter helper methods are all static?
+           // this prevents m_intData from becoming null 
+           // when we exit the constructor
+           // presumably this is because the filter helper 
+           // methods are all static?
            m_intData = new int[temp.length];
            for(int i = 0; i < temp.length; i++){
               m_intData[i] = temp[i];
@@ -91,7 +95,8 @@ public class FilterBlock extends ContiguousBlock
         length = m_intData.length;
         double[] filterIn = Azimuth.intArrayToDoubleArray(m_intData);
 
-        // doing that in case m_intData's length must be equal to the filter data's, now band-pass it
+        // doing that because we assumee m_intData's length 
+        // must be equal to the filter data's, now band-pass it
         filterIn = lowPassFilter(filterIn, (int)(1000000 / interval));
 
         m_filterData = Azimuth.doubleArrayToIntArray(filterIn);
@@ -118,10 +123,13 @@ public class FilterBlock extends ContiguousBlock
         station = superset.getStation();
 
         // Copy subset of integer data
-        m_filterData = Arrays.copyOfRange(superset.getFilterData(), iStart, iStart+size);
-        m_intData = Arrays.copyOfRange(superset.getIntData(), iStart, iStart+size);
+        m_filterData = Arrays.copyOfRange(
+                            superset.getFilterData(), iStart, iStart+size);
+        m_intData = Arrays.copyOfRange(
+                            superset.getIntData(), iStart, iStart+size);
         //System.arraycopy(superset.getIntData(), iStart, m_intData, 0, size);
-        //System.arraycopy(superset.getFilterData(), iStart, m_filterData, 0, size);
+        //System.arraycopy(superset.getFilterData(),
+                                               iStart, m_filterData, 0, size);
         
     } // constructor for subset of another FilterBlock
 
@@ -141,7 +149,8 @@ public class FilterBlock extends ContiguousBlock
      * @param superset  The FilterBlock that we want to create a subset of
      * @param startTime    Time offset to begin reading data from
      * @param endTime      Time offset to end reading data from
-     * @throws SequenceRangeException if the times are outside the data's boundaries
+     * @throws SequenceRangeException if the times are outside 
+     * the data's boundaries
      */
     // TODO: throw sequence range exception if the times are bad?
     public FilterBlock(FilterBlock superset, long startTime, long endTime) 
@@ -166,9 +175,11 @@ public class FilterBlock extends ContiguousBlock
        }
 
        int count = (int) ((endTime - startTime) / ivl);
-       int index = (int) (((startTime - sTime) + (ivl / 2)) / ivl); // is this right?
+       int index = (int) (((startTime - sTime) + (ivl / 2)) / ivl); 
+                   // TODO: check that this calc of index is right
        // Copy subset of integer data
-       m_filterData = Arrays.copyOfRange(superset.getFilterData(), index, count);
+       m_filterData = Arrays.copyOfRange(
+                                   superset.getFilterData(), index, count);
        m_intData = Arrays.copyOfRange(superset.getIntData(), index, count);
        length = m_intData.length;
     }
@@ -272,7 +283,8 @@ public class FilterBlock extends ContiguousBlock
      */
     public boolean containsRange(long startTime, long endTime) {
       boolean result = false;
-      if ((startTime >= this.getStartTime()) && (endTime <= this.getEndTime())) {
+      if ((startTime >= this.getStartTime()) && 
+          (endTime <= this.getEndTime())) {
         result = true;
       }
         return result;
