@@ -441,7 +441,7 @@ public class InvertAzimuth
         }
 
         Cmplx[] timeseriesC = Cmplx.fft(timeseriesFilter);
-        timeseriesC = apply((double)sps, timeseriesC, fl,fh);
+        timeseriesC = FilterHelper.apply((double)sps, timeseriesC, fl,fh);
         timeseriesFilter = Cmplx.fftInverse(timeseriesC, timeseries.length);
 
         for(int ind = 0; ind < timeseries.length; ind++){
@@ -458,7 +458,9 @@ public class InvertAzimuth
      * @param fl  Low corner frequency
      * @param fh  High corner frequency
      * @return  Complex form of filtered time series
+     * @deprecated Use apply function in the FilterHelper class instead
      */
+    @Deprecated
     private Cmplx[] apply(double dt, Cmplx[] cx, double fl, double fh)
     {
         int npts = cx.length;
