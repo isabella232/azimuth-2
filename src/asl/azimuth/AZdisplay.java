@@ -698,6 +698,7 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
                     TimeRange result = new TimeRange(t1,t2);
                     System.out.println("RESULT:       "
                                +result.getStart()+","+result.getEnd());
+                    */
                     mergedRanges.add(result);
                  }
                  catch(ArithmeticException e){

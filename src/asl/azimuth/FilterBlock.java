@@ -127,9 +127,6 @@ public class FilterBlock extends ContiguousBlock
                             superset.getFilterData(), iStart, iStart+size);
         m_intData = Arrays.copyOfRange(
                             superset.getIntData(), iStart, iStart+size);
-        //System.arraycopy(superset.getIntData(), iStart, m_intData, 0, size);
-        //System.arraycopy(superset.getFilterData(),
-                                               iStart, m_filterData, 0, size);
         
     } // constructor for subset of another FilterBlock
 
