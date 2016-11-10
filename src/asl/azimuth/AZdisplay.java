@@ -690,14 +690,17 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
            for(TimeRange t1 : set1){
               for(TimeRange t2 : set2){
                  try{
+                    TimeRange result = new TimeRange(t1,t2);
+
                     /* used for debugging control flow
                     System.out.println("COMPARING T1: "
                                +t1.getStart()+","+t1.getEnd());
                     System.out.println("COMPARING T2: "
                                +t2.getStart()+","+t2.getEnd());
-                    TimeRange result = new TimeRange(t1,t2);
                     System.out.println("RESULT:       "
                                +result.getStart()+","+result.getEnd());
+                    */                    
+
                     mergedRanges.add(result);
                  }
                  catch(ArithmeticException e){
