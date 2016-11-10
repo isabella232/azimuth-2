@@ -48,7 +48,7 @@ public class TimeRange implements Comparable<TimeRange>{
    * @return The start time as a java Date
    */
   public Date getStartAsDate(){
-    return new Date(startTime);
+    return new Date(startTime/1000);
   }
 
   /**
@@ -56,7 +56,7 @@ public class TimeRange implements Comparable<TimeRange>{
    * @return The end time as a java Date
    */
   public Date getEndAsDate(){
-    return new Date(endTime);
+    return new Date(endTime/1000);
   }
 
   /**
