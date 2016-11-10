@@ -24,9 +24,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.dial.DialPlot;
 import org.jfree.ui.ExtensionFileFilter;
 
 /**

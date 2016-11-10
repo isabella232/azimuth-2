@@ -1,7 +1,6 @@
 package asl.azimuth;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -39,7 +38,6 @@ import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
-import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -412,7 +410,7 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
 
     // TODO: move most of this code into a backend function instead 
     // (i.e., into Azimuth.java?)
-    /*
+    /**
      * Called to replace one of the plots at a time based on passed character,
      * 'n' for the north plot, 'e' for the east plot, 'r' (or any other 
      * character) for the ref plot.
@@ -466,22 +464,18 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
        // let's process the data now that we have it
        // (and then replace any current plot with a new one)
        
-       SegmentPlotter segPlot;    // choose which object set we'll be updating
        // identify which channel to update based on the passed parameter
        // and mark it as currently unset (to be filled with new data)
        // TODO: separate it into its own function?
        switch (plot) {
-          case 'n':
+          case NORTH:
              northSet = false;
-             segPlot = northSegmentPlot;
              break;
-          case 'e':
+          case EAST:
              eastSet = false;
-             segPlot = eastSegmentPlot;
              break;
           default:
              refSet = false;
-             segPlot = referenceSegmentPlot;
        }
 
        // reinitialize the time series ONLY if all 3 graphs are cleared
@@ -578,23 +572,21 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
 
        setPlotActive(plot);
 
-       int totalDataPoints = 0; // TODO: get rid of this, find counts per plot
-                                // when constructing the range plot map
-
        // TODO: move this to time range plot map construction
        // where totalDataPoints will be more reflective of actual data
+       int totalDataPoints = 0;
+
        countsPerPlot = totalDataPoints / prefs.GetMainWidth();
        if (countsPerPlot < 1){
            countsPerPlot = 1;
        }
 
        statusField.setText("Azimuth data files contained " + blocks.size() 
-            + " seperate time segments. Largest is (" 
-            + startTime.toString()+","+endTime.toString()+")");
+            + " seperate time segments.");
 
     }
 
-    /*
+    /**
      * Used to update the title of a plot with
      * data taken from a filter block of that plot's data
      * Since the list of blocks is persistent it can be called
@@ -607,8 +599,8 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
        // since we won't call this until plot time
        // selectBlock should already be defined 
        switch (plot) {
-          case 'n':
-             active = selectBlock.get('n');
+          case NORTH:
+             active = selectBlock.get(NORTH);
              mNorthStation = active.getStation();
              mNorthNetwork = active.getNetwork();
              mNorthChannel = active.getChannel();
@@ -616,8 +608,8 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
              segPlt.SetTitle(mNorthStation, mNorthNetwork,
                     mNorthChannel, mNorthLocation);
              break;
-          case 'e':
-             active = selectBlock.get('e');
+          case EAST:
+             active = selectBlock.get(EAST);
              mEastStation = active.getStation();
              mEastNetwork = active.getNetwork();
              mEastChannel = active.getChannel();
@@ -626,7 +618,7 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
                     mEastChannel, mEastLocation);
              break;
           default:
-             active = selectBlock.get('r');
+             active = selectBlock.get(REF);
              mRefStation = active.getStation();
              mRefNetwork = active.getNetwork();
              mRefChannel = active.getChannel();
@@ -636,16 +628,16 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
        }
     }
 
-    /*
+    /**
      * Once valid data is loaded, set a plot as having that data
      */
     private void setPlotActive(char plot){
        switch (plot){
-          case 'n':
+          case NORTH:
              northSet = true;
              northCancel.setEnabled(true);
              break;
-          case 'e':
+          case EAST:
              eastSet = true;
              eastCancel.setEnabled(true);
              break;
@@ -656,7 +648,7 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
 
     }
 
-    /*
+    /**
      * Collects the cartesian product of each set's valid time ranges
      * and eventually puts them in a single set to be used to populate the graph
      * view windows, finding the intersecting set of each product result
@@ -754,7 +746,7 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
 
     }
 
-    /*
+    /**
      * Construct a map that lets us find sub-sequences of the read-in data
      * so that when we switch from one range of time to another we can quickly
      * find the relevant filter block and replot, rather than look back up if
@@ -806,7 +798,7 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
     }
 
 
-    /*
+    /**
      * Called as part of FileProcess, to load the corresponding 
      * seed file when the user clicks on the corresponding button
      * Since we only load one seed file at a time, 
@@ -821,10 +813,10 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
        
        // now make it clear which channel we are about to load from here
        switch (plot) {
-          case 'n':
+          case NORTH:
              channelSelector.setChannelLabel(0, "1/North Reference: ");
              break;
-          case 'e':
+          case EAST:
              channelSelector.setChannelLabel(0, "2/East Reference: ");
              break;
           default:
@@ -832,13 +824,29 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
        }
 
     }
+    
+    /**
+     * Handles actions when a graph load button is pressed:
+     * gathers data, constructs plottable ranges, and updates GUI
+     * @param Plot to have data loaded for and processed
+     */
+    private void loadAndProcess(char c){
+      
+      // leave any data there alone if we can help it
+      // only reset the plot if we use the cancel button
+      // (i.e., if source == northCancel)
+      updateGui();
+      FileProcess(c);
+      setComboRanges();
+      updateGui();
+    }
 
     /**
      * Displays the data found under the current active time range.
      * Assumes we have already done time-range gathering
      * (Zoomed-in data taken from a subset of the data plotted here)
      */
-    private void displayPlotSegments()
+    private void preparePlots()
     {
 
         Map<Character, SegmentPlotter> segPlots = collectSegPlots();
@@ -888,18 +896,16 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
 
         setFinalData(); // make sure the solver has data to work with
 
-        // we'll use displayZoom to actually put the graphics up there
-        // technically we're zoomed in, just at a factor of 1:1 ;)
-        // TODO: maybe give displayZoom a better name as it is the 
-        // primary display driver now
-        displayZoom();
+        // same function as used to display zoomed data
+        // but here we work with it as though it were 1:1 instead
+        displayPlots();
         
         // System.out.println("All graphs plotted!");
 
     } // DisplayPlotSegments()
 
 
-    /*
+    /**
      * Sets the data to be passed into the Azimuth solver
      */
     private void setFinalData(){
@@ -913,19 +919,19 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
 
 
     /**
-     * Provide a function to get all 3 plots in a single collection (map)
+     * Provide a function to get active plots in a single collection (map)
      */
     private Map<Character, SegmentPlotter> collectSegPlots(){
        Map<Character,SegmentPlotter> segPlots = 
                              new HashMap<Character,SegmentPlotter>();
        if(northSet){
-          segPlots.put('n', northSegmentPlot);
+          segPlots.put(NORTH, northSegmentPlot);
        }
        if(eastSet){
-          segPlots.put('e', eastSegmentPlot);
+          segPlots.put(EAST, eastSegmentPlot);
        }
        if(refSet){
-          segPlots.put('r', referenceSegmentPlot);
+          segPlots.put(REF, referenceSegmentPlot);
        }
        return segPlots;
     }
@@ -954,11 +960,9 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
             int len = selectBlock.get(c).getFilterData().length;
             // I know there's this length parameter in a FilterBlock, 
             // but I don't like touching it since it's public
-            iSeg0Size = selectBlock.get(c).length * 
-                                   (1000-iLeftSliderValue) / 1000;
-            iSeg2Size = selectBlock.get(c).length * 
-                                   (1000-iRightSliderValue) / 1000;
-            iSeg1Size = selectBlock.get(c).length - (iSeg0Size + iSeg2Size);
+            iSeg0Size = len * (1000-iLeftSliderValue) / 1000;
+            iSeg2Size = len * (1000-iRightSliderValue) / 1000;
+            iSeg1Size = len - (iSeg0Size + iSeg2Size);
             //System.out.println("" + iSeg1Size);
 
             int segFinal[] = new int[iSeg1Size];
@@ -990,7 +994,7 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
     /**
      * Draws the plot and does additional bookkeeping
      */
-    private void displayZoom()
+    private void displayPlots()
     {
         
         // need to get the plots
@@ -1091,7 +1095,7 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
 
     /**
      * Implements listener for slider events for data selection cursor control
-     * @param e	ChangeEvent representing the slider motion detected
+     * @param e ChangeEvent representing the slider motion detected
      */
     public void stateChanged(ChangeEvent e)
     {
@@ -1161,20 +1165,19 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
     } // stateChanged()
 
 
-    /*
+    /**
      * Clears out data when a plot has been cleared
-     *
      */
     private void removeGraph(Character c){
     
        switch(c){
-          case 'n':
+          case NORTH:
             northSet = false;
             northCancel.setEnabled(false);
             updateGui();
             northSegmentPlot.resetTimeData();
             break;
-          case 'e':
+          case EAST:
             eastSet = false;
             eastCancel.setEnabled(false);
             updateGui();
@@ -1219,7 +1222,7 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
                selectBlock.put(c, new FilterBlock(finalBlock.get(c), 0, len));
             }
             
-            displayZoom();
+            displayPlots();
             statusField.setText("Done zooming in");
             //zoomOutButton.setEnabled(true);
             zoomed = true;
@@ -1235,7 +1238,7 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
                 plot.resetTimeData();
             }
 
-            displayPlotSegments(); // go back to the zoomed-out plot
+            preparePlots(); // go back to the zoomed-out plot
 
             for (SegmentPlotter plot : segPlots.values()){
                 // z: see if redundant
@@ -1247,42 +1250,27 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
         }
         else if (source == northButton)
         {
-           // leave the data there alone if we can help it
-           // only reset the plot if we use the cancel button
-           // (i.e., if source == northCancel)
-           updateGui();
-           FileProcess('n');
-           setComboRanges();
-           updateGui();
-           // TODO: since these are the same for 
-           // each source, set them up as an 
-           // external function?
+           loadAndProcess(NORTH);
         }
         else if (source == northCancel)
         {
-           removeGraph('n');
+           removeGraph(NORTH);
         }
         else if (source == eastButton)
         {
-           updateGui();
-           FileProcess('e');
-           setComboRanges();
-           updateGui();
+           loadAndProcess(EAST);
         }
         else if (source == eastCancel)
         {
-           removeGraph('e');
+           removeGraph(EAST);
         }
         else if (source == refButton)
         {
-           updateGui();
-           FileProcess('r');
-           setComboRanges();
-           updateGui();
+           loadAndProcess(REF);
         }
         else if (source == refCancel)
         {
-           removeGraph('r');
+           removeGraph(REF);
         }
         else if (source == segmentCombo)
         {
@@ -1293,7 +1281,7 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
             if(segmentCombo.getItemCount() > 0 && 
                                   segmentCombo.getSelectedIndex() > -1){
                zoomed = false;
-               displayPlotSegments();
+               preparePlots();
                for(SegmentPlotter plot : collectSegPlots().values()){
                   plot.SetVisible(true);
                }
@@ -1308,11 +1296,11 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
             {
                 // Convert data from int to doubles
                 double [] north = Azimuth.intArrayToDoubleArray(
-                                                     finalData.get('n'));
+                                                     finalData.get(NORTH));
                 double [] east = Azimuth.intArrayToDoubleArray(
-                                                     finalData.get('e'));
+                                                     finalData.get(EAST));
                 double [] reference = Azimuth.intArrayToDoubleArray(
-                                                     finalData.get('r'));
+                                                     finalData.get(REF));
 
                 //generateButton.setEnabled(false);
                 //cancelButton.setEnabled(true);
@@ -1595,7 +1583,6 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
     private AzAngleDisplay      azAngleDisplay;
 
     // these are used to map data to plots
-    // TODO: replace bare characters with these
     private final char NORTH = 'n';
     private final char EAST  = 'e';
     private final char REF   = 'r';
@@ -1633,9 +1620,7 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
     // used to store the data that gets passed right to the solver
     Map<Character,FilterBlock>  finalBlock = 
                                   new HashMap<Character,FilterBlock>();
-    // TODO: is this one still used?
-    Map<Character,FilterBlock>  zoomBlock = 
-                                  new HashMap<Character,FilterBlock>();
+
     // the timeseries the solver actually used, taken from finalBlock
     Map<Character, int[]>       finalData = new HashMap<Character, int[]>();
 

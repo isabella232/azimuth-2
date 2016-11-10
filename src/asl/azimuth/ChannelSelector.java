@@ -1,6 +1,4 @@
-/*
- * @author amkearns
- */
+
 
 package asl.azimuth;
 
@@ -86,7 +84,7 @@ implements ActionListener,
     private JButton           cancelReadButton;
 
     private JLabel[]          channelLabels;
-    private JComboBox[]       channelCombos;
+    private JComboBox<File>[] channelCombos;
 
     private JButton           okButton;
     private JButton           cancelButton;
@@ -166,7 +164,7 @@ implements ActionListener,
         // Scrollable list of files
         JPanel listPanel = new JPanel(new BorderLayout());
         listPanel.setBorder(new EmptyBorder(5,5,0,5));
-        filesModel = new DefaultListModel();
+        filesModel = new DefaultListModel<File>();
         fileList = new JList<File>(filesModel);
         fileList.addListSelectionListener(this);
         fileList.setVisibleRowCount(100);
