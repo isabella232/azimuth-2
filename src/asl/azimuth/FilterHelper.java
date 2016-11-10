@@ -133,7 +133,7 @@ public class FilterHelper{
    * @param sps         Samples per second
    * @return            The filtered data
    */
-  private static double[] lowPassFilter(double[] timeseries, long sps)
+  public static double[] lowPassFilter(double[] timeseries, long sps)
   {
     float[] timeseriesFilter = new float[timeseries.length];
     double[] timeseriesdouble = new double[timeseries.length];

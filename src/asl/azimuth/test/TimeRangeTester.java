@@ -1,3 +1,5 @@
+package asl.azimuth.test;
+
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -22,7 +24,7 @@ public class TimeRangeTester {
   TimeRange tr2 = new TimeRange(st2,st3);
   TimeRange tr3 = new TimeRange(st2,st4);
   TimeRange tr4 = new TimeRange(st1,st3);
-  TimeRange tr5 = new TimeRange(st1,st3);
+  TimeRange tr5 = new TimeRange(1234L,3455L);
   
   
   @Test
