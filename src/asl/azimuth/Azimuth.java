@@ -287,10 +287,29 @@ public class Azimuth
     {
         double[] dest = new double[source.length];
         int length = source.length;
-        for (int i = 0; i < length; i++) {
+        for (int i = 0; i < source.length; i++) {
             dest[i] = source[i];
         }
         return dest;
     }
+
+    /**
+     * Converts an array of type double into an array of type int.
+     *
+     * @param   source     The array of double values to be converted.
+     * 
+     * @return  An array of int values.
+     * @author amkearns
+     */
+    static int[] doubleArrayToIntArray(double[] source) 
+    {
+        int[] dest = new int[source.length];
+        for (int i = 0; i < source.length; i++) {
+            dest[i] = (int)source[i];
+        }
+        return dest;
+    }
+
+
 }
 
