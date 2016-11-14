@@ -14,7 +14,7 @@ import java.util.Arrays;
  */
 public class FilterBlock extends ContiguousBlock
 {
-    public  int length = 0; // TODO: if this is ever read from, MAKE FINAL
+    public  int length = 0; // TODO: make final so can't be modified
     private int []  m_intData;
     private int []  m_filterData;
 
@@ -32,13 +32,18 @@ public class FilterBlock extends ContiguousBlock
      */
     public FilterBlock(ContiguousBlock cBlock, DataSet dSet) 
                                  throws SequenceRangeException{
-        // TODO: add exception in case someone decides 
-        // to pass non-matching time interval and data?
-
         // contiguousBlock has the time/interval data we need, 
-        // dataSet the data sequence and plot names
+        // dataSet the data sequence and plot namesa
+        // have to manually define superconstructor for parent ContiguousBlock
         super(cBlock.getStartTime(), cBlock.getEndTime(),
               FilterHelper.ONE_HZ_INTERVAL);
+        
+        
+        if(cBlock.getStartTime() != dSet.getStartTime()
+            || cBlock.getEndTime() != dSet.getEndTime()){
+          throw new SequenceRangeException();
+        }
+
 
         network = dSet.getNetwork();
         station = dSet.getStation();
@@ -165,7 +170,7 @@ public class FilterBlock extends ContiguousBlock
     public int [] getIntData()
     {
         if(m_intData == null){
-	   System.out.println("Well, it's null now!!");
+     System.out.println("Well, it's null now!!");
         }
         return m_intData;
     }

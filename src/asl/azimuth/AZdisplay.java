@@ -72,7 +72,7 @@ import asl.seedsplitter.SequenceRangeException;
 public class AZdisplay
 {
     public static final int DEFAULT_WIDTH = 1150;
-    public static final int DEFAULT_HEIGHT = 1000;
+    public static final int DEFAULT_HEIGHT = 850;
     public static AZprefs prefs;
     private MainFrame frame;
 
@@ -112,7 +112,7 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
     private static final long serialVersionUID = 1L;
     private ArrayList<EHChartPanel> plotPanels = null;
     public static final int MINIMUM_WIDTH = 700;
-    public static final int MINIMUM_HEIGHT = 1000;
+    public static final int MINIMUM_HEIGHT = 850;
 
     /**
      * Constructor for MainFrame.  Top level Gui creation routine
@@ -175,8 +175,8 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
         northCancel.setEnabled(false);
         northSubPanel.add(northCancel, BorderLayout.EAST);
 
-        // add the two buttons below the graph
-        northViewBufferJPanel.add(northSubPanel, BorderLayout.SOUTH);
+        // add the two buttons below the graph - MOVED BELOW ALL PLOTS
+        //northViewBufferJPanel.add(northSubPanel, BorderLayout.SOUTH);
 
         add(northViewBufferJPanel);
 
@@ -189,7 +189,7 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
         eastViewJPanel.setBorder(BorderFactory.createLoweredBevelBorder());
         eastViewBufferJPanel = new JPanel();
         eastViewBufferJPanel.setLayout(new BorderLayout());
-        eastViewBufferJPanel.setBorder(new EmptyBorder(0, 5, 0, 5));
+        eastViewBufferJPanel.setBorder(new EmptyBorder(5, 5, 0, 5));
         eastViewBufferJPanel.add(eastViewJPanel, BorderLayout.CENTER);
         
         JPanel eastSubPanel = new JPanel(); 
@@ -208,7 +208,7 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
         eastCancel.setEnabled(false);
         eastSubPanel.add(eastCancel, BorderLayout.EAST);
 
-        eastViewBufferJPanel.add(eastSubPanel, BorderLayout.SOUTH);
+        //eastViewBufferJPanel.add(eastSubPanel, BorderLayout.SOUTH);
 
         add(eastViewBufferJPanel);
 
@@ -221,7 +221,7 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
         referenceViewJPanel.setBorder(BorderFactory.createLoweredBevelBorder());
         referenceViewBufferJPanel = new JPanel();
         referenceViewBufferJPanel.setLayout(new BorderLayout());
-        referenceViewBufferJPanel.setBorder(new EmptyBorder(0, 5, 0, 5));
+        referenceViewBufferJPanel.setBorder(new EmptyBorder(5, 5, 0, 5));
         referenceViewBufferJPanel.add(referenceViewJPanel, BorderLayout.CENTER);
 
         JPanel refSubPanel = new JPanel();
@@ -237,12 +237,19 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
         refCancel.addActionListener(this);
         refCancel.setMaximumSize(refCancel.getPreferredSize());
         refCancel.setEnabled(false);
-        refSubPanel.add(refCancel, BorderLayout.WEST);
+        refSubPanel.add(refCancel, BorderLayout.EAST);
 
-        referenceViewBufferJPanel.add(refSubPanel, BorderLayout.SOUTH);
-
+        //referenceViewBufferJPanel.add(refSubPanel, BorderLayout.SOUTH);
+        
         add(referenceViewBufferJPanel);
-
+        
+        // move load and clear buttons to a single row
+        JPanel loadPanel = new JPanel();
+        loadPanel.add(northSubPanel, BorderLayout.WEST);
+        loadPanel.add(eastSubPanel, BorderLayout.CENTER);
+        loadPanel.add(refSubPanel, BorderLayout.EAST);
+        add(loadPanel);
+        
         plotPanels = new ArrayList<EHChartPanel>(3);
         plotPanels.add((EHChartPanel)northViewJPanel);
         plotPanels.add((EHChartPanel)eastViewJPanel);
@@ -253,7 +260,7 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
 
         JPanel panelSlider = new JPanel();
         panelSlider.setLayout(new BoxLayout(panelSlider, BoxLayout.X_AXIS));
-        panelSlider.setBorder(new EmptyBorder(20, 10, 5, 10));
+        panelSlider.setBorder(new EmptyBorder(5, 10, 5, 10));
         leftSlider = new JSlider(0, 1000, iLeftSliderValue);
         leftSlider.setInverted(true);
         leftSlider.addChangeListener(this);
@@ -265,7 +272,7 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
 
         JPanel panelTime = new JPanel();
         panelTime.setLayout(new BoxLayout(panelTime, BoxLayout.X_AXIS));
-        panelTime.setBorder(new EmptyBorder(5, 10, 10, 10));
+        panelTime.setBorder(new EmptyBorder(5, 10, 5, 10));
         zoomInButton = new JButton("Zoom In ", 
                Resources.getAsImageIcon("resources/icons/zoom-in.png", 20, 20));
         zoomInButton.addActionListener(this);
@@ -291,13 +298,13 @@ class MainFrame extends JFrame implements ActionListener, FocusListener,
 
         segmentCombo = new JComboBox<TimeRange>();
         segmentCombo.setEditable(false);
-        segmentCombo.setBorder(new EmptyBorder(10, 10, 10, 10));
+        segmentCombo.setBorder(new EmptyBorder(5, 10, 5, 10));
         segmentCombo.addActionListener(this);
         add(segmentCombo);
 
         JPanel panelProgress = new JPanel();
         panelProgress.setLayout(new BorderLayout());
-        panelProgress.setBorder(new EmptyBorder(20, 10, 20, 10));
+        panelProgress.setBorder(new EmptyBorder(10, 10, 10, 10));
         inverterProgress = new JProgressBar(SwingConstants.HORIZONTAL);
         panelProgress.add(inverterProgress, BorderLayout.NORTH);
         add(panelProgress);
