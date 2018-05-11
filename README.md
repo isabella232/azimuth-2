@@ -3,6 +3,14 @@ azimuth
 
 ASL Azimuth
 
+NEWEST VERSION OF AZIMUTH INCLUDED IN ASL-SENSOR-SUITE
+------
+The azimuth functionality is now included in https://github.com/usgs/asl-sensor-suite.  
+
+
+
+
+
 
 WHAT IT DOES
 ------
