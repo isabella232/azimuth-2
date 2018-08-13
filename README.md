@@ -17,7 +17,7 @@ WHAT IT DOES
 
 This code implements the strategy for determining seismic data sensor azimuths 
 based on the strategy in the paper "Relative azimuth inversion by way of damped
-maximum correlation estimates" by Ringer, Edwards, Hutt, Shelly (2011, Elsevier 
+maximum correlation estimates" by Ringler, Edwards, Hutt, Shelly (2011, Elsevier 
 Computers & Geosciences).
 
 Specifically, this program takes in data samples from a seismometer with known 
